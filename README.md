@@ -1,27 +1,15 @@
 # DogStatsD Dockerfile
 
-This repository is meant to build the base image for a DogStatsD container. You will have to use the resulting image to configure and run DogStatD.
+This repository is meant to build the image for a DogStatsD container.
 
 
 ## Quick Start
 
-Create a `Dockerfile` to set your API key.
+The default image is ready-to-go, you just need to set your hostname and API_KEY in the environment.
 
 ```
-FROM datadog/docker-dogstatsd
-
-# Set your API key
-RUN sed -i -e"s/^.*api_key:.*$/api_key: YOUR_API_KEY/" /etc/dd-agent/datadog.conf
+docker run -d --name dogstatsd -h `hostname` -e API_KEY=apikey_3 datadog/docker-dogstatsd
 ```
-
-Build it.
-
-`docker build .`
-
-Then run it.
-
-`docker run -d -name dogstatsd dogstatsd_image_id`
-
 
 ## Link to other containers
 
@@ -30,7 +18,7 @@ Your other containers will probably want to send datas to the DogStatsD containe
 ```
 docker run  --name my_container           \
             --all_your_flags              \
-            --link dd-agent:my_container  \
+            --link dogstatsd:my_container \
             my_image_id
 ```
 
@@ -45,19 +33,13 @@ DogStatsD logs are available through the `logs` command.
 
 `docker logs dogstatsd`
 
-You can set logging to DEBUG verbosity by adding to your `Dockerfile`:
-
-```
-RUN sed -i -e"s/^.*log_level:.*$/log_level: DEBUG/" /etc/dd-agent/datadog.conf
-```
 
 ### DogStatsD from host
 
 If you want to send datas to DogStatsD from your host, you have to bind the port. For that, add the option `-p 8125:8125/udp` to the Docker DogStatsD run command.
 
-`docker run -d -name dogstatsd -p 8125:8125/udp dogstatsd_image_id`
 
+More documentation:
 
-
-
-More documentation: [DogStatsD guide](http://docs.datadoghq.com/guides/dogstatsd/)
+* [DogStatsD guide](http://docs.datadoghq.com/guides/dogstatsd/)
+* [Datadog Agent Docker containers](https://github.com/DataDog/dd-agent/wiki/Docker-Containers)
