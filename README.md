@@ -18,7 +18,7 @@ Your other containers will probably want to send datas to the DogStatsD containe
 ```
 docker run  --name my_container           \
             --all_your_flags              \
-            --link dogstatsd:my_container \
+            --link dogstatsd:dogstatsd \
             my_image_id
 ```
 
