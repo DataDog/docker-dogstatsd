@@ -5,7 +5,7 @@ MAINTAINER Benjamin Fernandes <benjamin@datadoghq.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Add datadog repository
-RUN echo "deb http://apt.datadoghq.com/ unstable main" > /etc/apt/sources.list.d/datadog.list
+RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52
 RUN apt-get update
 
