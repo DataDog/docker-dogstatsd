@@ -5,15 +5,13 @@ MAINTAINER Benjamin Fernandes <benjamin@datadoghq.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Add datadog repository
-RUN echo "deb http://apt.datadoghq.com/ unstable main" > /etc/apt/sources.list.d/datadog.list
+RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52
 RUN apt-get update
 
 # Install Dogstatsd
-RUN apt-get install datadog-agent -qq --no-install-recommends
-# Fix missing dependency, should be removed soon
-RUN apt-get install procps -qq --no-install-recommends
-
+RUN apt-get install adduser -qq
+RUN apt-get install datadog-agent -qq
 
 # Configure it
 RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf
