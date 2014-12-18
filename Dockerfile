@@ -1,31 +1,27 @@
 FROM debian:wheezy
 
-MAINTAINER Benjamin Fernandes <benjamin@datadoghq.com>
+MAINTAINER Datadog <package@datadoghq.com>
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DOCKER_DD_AGENT yes
+ENV AGENT_VERSION 1:5.1.1-546
 
-# Add datadog repository
-RUN echo "deb http://apt.datadoghq.com/ unstable main" > /etc/apt/sources.list.d/datadog.list
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52
-RUN apt-get update
+# Install the Agent
+RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
+ && apt-get update \
+ && apt-get install -y datadog-agent="${AGENT_VERSION}"
 
-# Install Dogstatsd
-RUN apt-get install datadog-agent -qq --no-install-recommends
-# Fix missing dependency, should be removed soon
-RUN apt-get install procps -qq --no-install-recommends
+# Configure the Agent
+# 1. Listen to statsd from other containers
+# 2. Turn syslog off
+RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
+ && sed -i -e"s/^.*non_local_traffic:.*$/non_local_traffic: yes/" /etc/dd-agent/datadog.conf \
+ && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.conf
 
+COPY entrypoint.sh /entrypoint.sh
 
-# Configure it
-RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf
-# Listen to statsd from other containers
-RUN sed -i -e"s/^.*non_local_traffic:.*$/non_local_traffic: yes/" /etc/dd-agent/datadog.conf
-# Turn off syslog
-RUN sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.conf
-
-# Use a startup script to setup configuration with environement variables
-ADD run-dogstatsd.sh /usr/local/bin/run-dogstatsd.sh
-RUN chmod +x /usr/local/bin/run-dogstatsd.sh
-
+# Expose DogStatsD port
 EXPOSE 8125/udp
 
-CMD ["/usr/local/bin/run-dogstatsd.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["dogstatsd"]
