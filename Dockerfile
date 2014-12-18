@@ -10,10 +10,8 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52
 RUN apt-get update
 
 # Install Dogstatsd
-RUN apt-get install datadog-agent -qq --no-install-recommends
-# Fix missing dependency, should be removed soon
-RUN apt-get install procps -qq --no-install-recommends
-
+RUN apt-get install adduser -qq
+RUN apt-get install datadog-agent -qq
 
 # Configure it
 RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf
