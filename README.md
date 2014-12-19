@@ -2,7 +2,7 @@
 
 This repository is meant to build the image for a DogStatsD container.
 
-** This image is deprecated. Please run [DogStatsD from docker-dd-agent](https://github.com/DataDog/docker-dd-agent/tree/new-usage-methods#dogstatsd) instead.**
+**This image is deprecated. Please run [DogStatsD from docker-dd-agent](https://github.com/DataDog/docker-dd-agent#standalone-dogstatsd) instead.**
 
 ## Quick Start
 
