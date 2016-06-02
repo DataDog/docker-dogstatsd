@@ -2,23 +2,21 @@
 
 This repository is meant to build the image for a DogStatsD container.
 
-**This image is deprecated. Please run [DogStatsD from docker-dd-agent](https://github.com/DataDog/docker-dd-agent#standalone-dogstatsd) instead.**
-
 ## Quick Start
 
-This image is ready-to-go, you just need to set your hostname and API_KEY in the environment.
+This image is ready-to-go, you just need to set your hostname and `API_KEY` in the environment.
 
 ```
-docker run -d --name dogstatsd -h `hostname` -e API_KEY=apikey_3 datadog/docker-dogstatsd
+docker run -d --name dogstatsd -h `hostname` -e API_KEY=YOUR_API_KEY datadog/docker-dogstatsd
 ```
 
 ## Link to other containers
 
-Your other containers will probably want to send datas to the DogStatsD container. For that, you will need to add a `--link` option to your run command.
+Your other containers will probably want to send data to the DogStatsD container. For that, you will need to add a `--link` option to your run command.
 
 ```
-docker run  --name my_container           \
-            --all_your_flags              \
+docker run  --name my_container \
+            --all_your_flags \
             --link dogstatsd:dogstatsd \
             my_image_id
 ```
